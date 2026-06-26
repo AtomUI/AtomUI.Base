@@ -12,6 +12,7 @@
         <EnableAotAnalyzer>false</EnableAotAnalyzer>
         <EnableTrimAnalyzer>false</EnableTrimAnalyzer>
         <EnableSingleFileAnalyzer>false</EnableSingleFileAnalyzer>
+        <NoWarn>$(NoWarn);RS1030;RS1037;RS2008</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>
