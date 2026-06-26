@@ -24,7 +24,6 @@ on:
 env:
   SOURCE_DIR: ${{ github.workspace }}
   BASE_OUTPUT_DIR: ${{ github.workspace }}/output
-  LOCAL_NUGET_DIR: ${{ github.workspace }}/nuget
   BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration || 'Release' }}
   TARGET_BRANCH: ${{ github.event.inputs.target_branch || github.ref_name }}
 
@@ -42,21 +41,6 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
-
-      - name: Create local NuGet feed
-        shell: pwsh
-        run: |
-          $localFeedPath = $env:LOCAL_NUGET_DIR
-          New-Item -Path $localFeedPath -ItemType Directory -Force | Out-Null
-          Write-Output "Local NuGet feed created at: $localFeedPath"
-          dotnet nuget add source $localFeedPath --name local-feed
-          $sources = dotnet nuget list source
-          if ($sources -match "local-feed") {
-            Write-Output "Local feed added successfully"
-          } else {
-            Write-Error "Failed to add local feed"
-            exit 1
-          }
 
       - name: Build AtomUI.Base solution
         shell: pwsh
@@ -77,20 +61,6 @@ jobs:
           )
           foreach ($project in $projects) {
             dotnet pack --no-build --output $env:BASE_OUTPUT_DIR --configuration $env:BUILD_CONFIGURATION $project
-          }
-          $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
-          foreach ($pkg in $packages) {
-            try {
-              dotnet nuget push $pkg.FullName --source $env:LOCAL_NUGET_DIR --skip-duplicate
-              if ($LASTEXITCODE -ne 0) {
-                exit $LASTEXITCODE
-              }
-              Write-Output "Pushed local NuGet package: $($pkg.Name)"
-            }
-            catch {
-              Write-Error "Push $($pkg.Name) error: $_"
-              exit 1
-            }
           }
 
       - name: Upload NuGet artifacts
