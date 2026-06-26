@@ -1,0 +1,112 @@
+name: AtomUI.Base Release Pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      TargetBranch:
+        description: 'Target branch to build'
+        type: string
+        default: 'main'
+      BuildConfiguration:
+        description: 'Build configuration'
+        type: string
+        default: 'Release'
+      PublishToNuget:
+        description: 'Publish to nuget.org'
+        type: boolean
+        default: false
+
+env:
+  SOURCE_DIR: ${{ github.workspace }}
+  BASE_OUTPUT_DIR: ${{ github.workspace }}/output
+  LOCAL_NUGET_DIR: ${{ github.workspace }}/nuget
+
+jobs:
+  BuildAtomUIBaseNuget:
+    name: Build AtomUI.Base NuGet packages
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ inputs.TargetBranch }}
+
+      - name: Setup .NET 10
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Create local NuGet feed
+        shell: pwsh
+        run: |
+          $localFeedPath = $env:LOCAL_NUGET_DIR
+          New-Item -Path $localFeedPath -ItemType Directory -Force | Out-Null
+          Write-Output "Local NuGet feed created at: $localFeedPath"
+          dotnet nuget add source $localFeedPath --name local-feed
+          $sources = dotnet nuget list source
+          if ($sources -match "local-feed") {
+            Write-Output "Local feed added successfully"
+          } else {
+            Write-Error "Failed to add local feed"
+            exit 1
+          }
+
+      - name: Build AtomUI.Base solution
+        shell: pwsh
+        run: |
+          dotnet build --configuration ${{ inputs.BuildConfiguration }} ./AtomUI.Base.slnx
+
+      - name: Test AtomUI.Base
+        shell: pwsh
+        run: |
+          dotnet test ./tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0 --configuration ${{ inputs.BuildConfiguration }} --no-build
+
+      - name: Create AtomUI.Base NuGet packages
+        shell: pwsh
+        run: |
+          $projects = @(
+            "./src/AtomUI.Base/AtomUI.Base.csproj",
+            "./src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj"
+          )
+          foreach ($project in $projects) {
+            dotnet pack --no-build --output $env:BASE_OUTPUT_DIR --configuration ${{ inputs.BuildConfiguration }} $project
+          }
+          $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
+          foreach ($pkg in $packages) {
+            try {
+              dotnet nuget push $pkg.FullName --source $env:LOCAL_NUGET_DIR --skip-duplicate
+              if ($LASTEXITCODE -ne 0) {
+                exit $LASTEXITCODE
+              }
+              Write-Output "Pushed local NuGet package: $($pkg.Name)"
+            }
+            catch {
+              Write-Error "Push $($pkg.Name) error: $_"
+              exit 1
+            }
+          }
+
+      - name: Upload NuGet artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: NuGetPackages
+          path: ${{ env.BASE_OUTPUT_DIR }}/*.nupkg
+
+      - name: Publish to nuget.org
+        if: ${{ inputs.PublishToNuget == true }}
+        shell: pwsh
+        run: |
+          $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
+          foreach ($pkg in $packages) {
+            try {
+              dotnet nuget push $pkg.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+              if ($LASTEXITCODE -ne 0) {
+                exit $LASTEXITCODE
+              }
+              Write-Output "Published NuGet package: $($pkg.Name)"
+            }
+            catch {
+              Write-Error "Publish $($pkg.Name) error: $_"
+              exit 1
+            }
+          }
