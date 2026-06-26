@@ -1,0 +1,6 @@
+<Project>
+    <PropertyGroup>
+        <NoWarn>$(NoWarn);CS7035</NoWarn>
+        <AtomUIBaseVersion>1.0.0-alpha.1</AtomUIBaseVersion>
+    </PropertyGroup>
+</Project>

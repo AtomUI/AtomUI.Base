@@ -1,0 +1,22 @@
+<Project>
+    <PropertyGroup>
+        <AtomUIBaseDevelopTargetFramework>net10.0</AtomUIBaseDevelopTargetFramework>
+        <AtomUIBaseProductionTargetFramework>net8.0</AtomUIBaseProductionTargetFramework>
+        <OutputType>Library</OutputType>
+        <TrimMode>copyused</TrimMode>
+        <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+        <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
+
+        <AtomUIBaseTargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(AtomUIBaseDevelopTargetFramework)</AtomUIBaseTargetFrameworks>
+        <AtomUIBaseTargetFrameworks Condition=" '$(Configuration)' == 'Release' ">$(AtomUIBaseDevelopTargetFramework);$(AtomUIBaseProductionTargetFramework)</AtomUIBaseTargetFrameworks>
+
+        <IsTestProject Condition="$(MSBuildProjectFullPath.Contains('test')) and $(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+        <NoWarn>$(NoWarn);CS1591;CS0436;CS7035</NoWarn>
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+        <GenerateAssemblyConfigurationAttribute>true</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>true</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+        <WarningsAsErrors>Nullable</WarningsAsErrors>
+    </PropertyGroup>
+</Project>

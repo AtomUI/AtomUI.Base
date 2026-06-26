@@ -1,0 +1,15 @@
+<Project>
+    <PropertyGroup>
+        <PackageId>$(MSBuildProjectName)</PackageId>
+        <Title>AtomUI.Base</Title>
+        <Author>Qinware Technologies Ltd.</Author>
+        <Authors>$(Author)</Authors>
+        <Description>AtomUI.Base provides foundational runtime and source-generation infrastructure for the AtomUI ecosystem.</Description>
+        <PackageTags>AtomUI;UI;Infrastructure;SourceGenerator;Roslyn</PackageTags>
+        <ProjectUrl>https://qinware.com</ProjectUrl>
+        <RepositoryUrl>https://github.com/AtomUI/AtomUI.Base</RepositoryUrl>
+        <Company>Qinware Technologies Ltd.</Company>
+        <Copyright>Copyright ©2018-2026, Qinware Technologies Co.,Ltd., All Rights Reserved.</Copyright>
+        <Version>$(AtomUIBaseVersion)</Version>
+    </PropertyGroup>
+</Project>
