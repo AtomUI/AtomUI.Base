@@ -1,17 +1,22 @@
 name: AtomUI.Base Release Pipeline
 
 on:
+  push:
+    branches:
+      - release/1.0
+    paths:
+      - .github/workflows/release-atomui-base.yml
   workflow_dispatch:
     inputs:
-      TargetBranch:
+      target_branch:
         description: 'Target branch to build'
         type: string
         default: 'release/1.0'
-      BuildConfiguration:
+      build_configuration:
         description: 'Build configuration'
         type: string
         default: 'Release'
-      PublishToNuget:
+      publish_to_nuget:
         description: 'Publish to nuget.org'
         type: boolean
         default: false
@@ -20,6 +25,8 @@ env:
   SOURCE_DIR: ${{ github.workspace }}
   BASE_OUTPUT_DIR: ${{ github.workspace }}/output
   LOCAL_NUGET_DIR: ${{ github.workspace }}/nuget
+  BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration || 'Release' }}
+  TARGET_BRANCH: ${{ github.event.inputs.target_branch || github.ref_name }}
 
 jobs:
   BuildAtomUIBaseNuget:
@@ -27,12 +34,12 @@ jobs:
     runs-on: windows-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.TargetBranch }}
+          ref: ${{ env.TARGET_BRANCH }}
 
       - name: Setup .NET 10
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '10.0.x'
 
@@ -54,12 +61,12 @@ jobs:
       - name: Build AtomUI.Base solution
         shell: pwsh
         run: |
-          dotnet build --configuration ${{ inputs.BuildConfiguration }} ./AtomUI.Base.slnx
+          dotnet build --configuration $env:BUILD_CONFIGURATION ./AtomUI.Base.slnx
 
       - name: Test AtomUI.Base
         shell: pwsh
         run: |
-          dotnet test ./tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0 --configuration ${{ inputs.BuildConfiguration }} --no-build
+          dotnet test ./tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0 --configuration $env:BUILD_CONFIGURATION --no-build
 
       - name: Create AtomUI.Base NuGet packages
         shell: pwsh
@@ -69,7 +76,7 @@ jobs:
             "./src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj"
           )
           foreach ($project in $projects) {
-            dotnet pack --no-build --output $env:BASE_OUTPUT_DIR --configuration ${{ inputs.BuildConfiguration }} $project
+            dotnet pack --no-build --output $env:BASE_OUTPUT_DIR --configuration $env:BUILD_CONFIGURATION $project
           }
           $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
           foreach ($pkg in $packages) {
@@ -87,13 +94,13 @@ jobs:
           }
 
       - name: Upload NuGet artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: NuGetPackages
           path: ${{ env.BASE_OUTPUT_DIR }}/*.nupkg
 
       - name: Publish to nuget.org
-        if: ${{ inputs.PublishToNuget == true }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish_to_nuget == 'true' }}
         shell: pwsh
         run: |
           $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
