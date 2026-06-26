@@ -10,11 +10,13 @@
         <RepositoryUrl>https://github.com/AtomUI/AtomUI.Base</RepositoryUrl>
         <Company>Qinware Technologies Ltd.</Company>
         <Copyright>Copyright ©2018-2026, Qinware Technologies Co.,Ltd., All Rights Reserved.</Copyright>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
         <Version>$(AtomUIBaseVersion)</Version>
     </PropertyGroup>
 
     <ItemGroup>
         <None Include="$(MSBuildThisFileDirectory)../LICENSE" Visible="False" Pack="True" PackagePath="/" />
+        <None Include="$(MSBuildThisFileDirectory)../README.md" Visible="False" Pack="True" PackagePath="/" />
     </ItemGroup>
 </Project>
