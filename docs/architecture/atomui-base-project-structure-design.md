@@ -218,7 +218,7 @@ The workflow should keep the same release pipeline shape:
 
 - `workflow_dispatch` only.
 - Inputs:
-  - `TargetBranch`, default `main`.
+  - `TargetBranch`, default `release/1.0`.
   - `BuildConfiguration`, default `Release`.
   - `PublishToNuget`, default `false`.
 - Environment variables:

@@ -6,7 +6,7 @@ on:
       TargetBranch:
         description: 'Target branch to build'
         type: string
-        default: 'main'
+        default: 'release/1.0'
       BuildConfiguration:
         description: 'Build configuration'
         type: string
