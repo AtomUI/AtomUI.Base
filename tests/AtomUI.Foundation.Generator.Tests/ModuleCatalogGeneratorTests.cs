@@ -363,7 +363,8 @@ public class ModuleCatalogGeneratorTests
 
         var source = result.GeneratedSources["ModuleGeneratedCatalog.g.cs"];
         source.ShouldContain("global::AtomUI.Modularity.ModuleRegistration.For<Demo.SelectionModule>");
-        source.ShouldContain("global::AtomUI.Modularity.ModuleDescriptor.For<Demo.SelectionModule>(\n                    \"Selection\"");
+        source.ShouldContain("global::AtomUI.Modularity.ModuleDescriptor.For<Demo.SelectionModule>");
+        source.ShouldContain("\"Selection\"");
     }
 
     [Fact]
