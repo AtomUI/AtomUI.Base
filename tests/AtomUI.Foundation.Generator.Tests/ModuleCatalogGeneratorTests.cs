@@ -1,9 +1,10 @@
+using AtomUI.Modularity;
 using AtomUI.Modularity.Generators;
 using Microsoft.CodeAnalysis;
 using Shouldly;
 using Xunit;
 
-namespace AtomUI.Modularity.Generators.Tests;
+namespace AtomUI.Foundation.Generator.Tests;
 
 public class ModuleCatalogGeneratorTests
 {

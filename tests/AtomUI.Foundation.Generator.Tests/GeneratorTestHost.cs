@@ -1,9 +1,10 @@
 using System.Collections.Immutable;
+using AtomUI.Modularity;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Diagnostics;
 
-namespace AtomUI.Modularity.Generators.Tests;
+namespace AtomUI.Foundation.Generator.Tests;
 
 internal static class GeneratorTestHost
 {

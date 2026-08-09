@@ -1,9 +1,9 @@
 ---
-name: atomui-base-create-pr
-description: Use when preparing an AtomUI.Base pull request summary from local git changes, including overview, validation, risks, and reviewer notes.
+name: atomui-foundation-create-pr
+description: Use when preparing an AtomUI.Foundation pull request summary from local git changes, including overview, validation, risks, and reviewer notes.
 ---
 
-# Create AtomUI.Base PR
+# Create AtomUI.Foundation PR
 
 ## Workflow
 

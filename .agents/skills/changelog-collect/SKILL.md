@@ -1,11 +1,11 @@
 ---
-name: atomui-base-changelog-collect
-description: Use when collecting AtomUI.Base changelog entries from git history, staged changes, issue references, or release notes and turning them into a concise Markdown changelog draft grouped by change type.
+name: atomui-foundation-changelog-collect
+description: Use when collecting AtomUI.Foundation changelog entries from git history, staged changes, issue references, or release notes and turning them into a concise Markdown changelog draft grouped by change type.
 ---
 
-# AtomUI.Base Changelog Collect
+# AtomUI.Foundation Changelog Collect
 
-Use this skill to collect user-facing changes for AtomUI.Base release notes or a changelog draft.
+Use this skill to collect user-facing changes for AtomUI.Foundation release notes or a changelog draft.
 
 ## Workflow
 

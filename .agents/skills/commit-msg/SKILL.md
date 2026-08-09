@@ -1,9 +1,9 @@
 ---
-name: atomui-base-commit-msg
-description: Generate a single-line commit message for AtomUI.Base by reading staged changes and recent commit style. Use when the user asks for a commit message, says "msg", "commit msg", "写提交信息", "创建 commit", or wants one-line text that covers staged changes.
+name: atomui-foundation-commit-msg
+description: Generate a single-line commit message for AtomUI.Foundation by reading staged changes and recent commit style. Use when the user asks for a commit message, says "msg", "commit msg", "写提交信息", "创建 commit", or wants one-line text that covers staged changes.
 ---
 
-# AtomUI.Base Commit Message Generation
+# AtomUI.Foundation Commit Message Generation
 
 ## Workflow
 

@@ -1,4 +1,4 @@
-# AtomUI.Base AI Collaboration Guidelines
+# AtomUI.Foundation AI Collaboration Guidelines
 
 ## Scope Control
 
@@ -9,6 +9,7 @@
 ## Verification
 
 - Run the narrowest useful command while iterating.
-- Run `dotnet build AtomUI.Base.slnx` before reporting project structure or build-system work complete.
-- Run `dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0` before reporting runtime behavior complete.
+- Run `dotnet build AtomUI.Foundation.slnx` before reporting project structure or build-system work complete.
+- Run `dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0` before reporting runtime behavior complete.
+- Run `dotnet test tests/AtomUI.Foundation.Generator.Tests/AtomUI.Foundation.Generator.Tests.csproj --framework net10.0` before reporting source generator work complete.
 - Run `git diff --check` before reporting any file-editing work complete.

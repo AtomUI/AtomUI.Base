@@ -1,10 +1,10 @@
-# AtomUI.Base Project Structure Implementation Plan
+# AtomUI.Foundation Project Structure Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Create the first complete AtomUI.Base repository skeleton with AtomUIV6-style build configuration, projects, tests, docs, local agent skills, and NuGet release workflow.
+**Goal:** Create the first complete AtomUI.Foundation repository skeleton with AtomUIV6-style build configuration, projects, tests, docs, local agent skills, and NuGet release workflow.
 
-**Architecture:** The repository uses lightweight root MSBuild files that import focused props from `build/`. Source code is split into a runtime package (`AtomUI.Base`) and an analyzer package skeleton (`AtomUI.Base.Generator`), with tests under `tests/` and documentation under `docs/`. Project-local workflow helpers live under `.agents/skills`, while GitHub Actions release automation lives under `.github/workflows`.
+**Architecture:** The repository uses lightweight root MSBuild files that import focused props from `build/`. Source code is split into a runtime package (`AtomUI.Foundation`) and an analyzer package skeleton (`AtomUI.Foundation.Generator`), with tests under `tests/` and documentation under `docs/`. Project-local workflow helpers live under `.agents/skills`, while GitHub Actions release automation lives under `.github/workflows`.
 
 **Tech Stack:** .NET SDK 10.0.300, C# latest, MSBuild, Central Package Management, xUnit v3, Shouldly, Roslyn analyzer packaging, GitHub Actions.
 
@@ -18,18 +18,18 @@
 - Create `Directory.Build.props`: root MSBuild entry importing `build/*.props`.
 - Create `Directory.Build.targets`: remove `*.csproj.DotSettings` items.
 - Create `Directory.Packages.props`: centrally manage NuGet versions.
-- Create `AtomUI.Base.slnx`: solution file for the three first-version projects.
+- Create `AtomUI.Foundation.slnx`: solution file for the three first-version projects.
 - Create `build/Version.props`: version constants.
 - Create `build/Common.props`: shared target framework and warning configuration.
 - Create `build/PackageMetaInfo.props`: NuGet metadata.
 - Create `build/Output.props`: output path routing.
 - Create `resources/.gitkeep`: preserve empty resources folder.
-- Create `src/AtomUI.Base/AtomUI.Base.csproj`: runtime package project.
-- Create `src/AtomUI.Base/BaseAssemblyMarker.cs`: public marker type.
-- Create `src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj`: analyzer package skeleton.
-- Create `src/AtomUI.Base.Generator/AtomUIBaseGeneratorMarker.cs`: internal generator assembly marker.
-- Create `tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj`: test project.
-- Create `tests/AtomUI.Base.Tests/BaseAssemblyMarkerTests.cs`: marker reference test.
+- Create `src/AtomUI.Foundation/AtomUI.Foundation.csproj`: runtime package project.
+- Create `src/AtomUI.Foundation/FoundationAssemblyMarker.cs`: public marker type.
+- Create `src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj`: analyzer package skeleton.
+- Create `src/AtomUI.Foundation.Generator/AtomUIFoundationGeneratorMarker.cs`: internal generator assembly marker.
+- Create `tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj`: test project.
+- Create `tests/AtomUI.Foundation.Tests/FoundationAssemblyMarkerTests.cs`: marker reference test.
 - Create `AGENTS.md`: small global entry point.
 - Create `docs/global-engineering-guidelines.md`: global engineering rules entry.
 - Create `docs/architecture/overview.md`: project overview.
@@ -37,9 +37,9 @@
 - Create `docs/architecture/dependency-graph.md`: project dependency rules.
 - Create `docs/engineering/agent-guidelines.md`: collaboration and verification rules.
 - Create `docs/engineering/source-generator-guidelines.md`: generator constraints.
-- Keep `docs/architecture/atomui-base-project-structure-design.md`: approved design reference.
-- Create `.agents/skills/*`: AtomUI.Base workflow skills.
-- Create `.github/workflows/release-atomui-base.yml`: NuGet release workflow.
+- Keep `docs/architecture/atomui-foundation-project-structure-design.md`: approved design reference.
+- Create `.agents/skills/*`: AtomUI.Foundation workflow skills.
+- Create `.github/workflows/release-atomui-foundation.yml`: NuGet release workflow.
 
 ### Task 1: Build System And Repository Shell
 
@@ -50,7 +50,7 @@
 - Create: `Directory.Build.props`
 - Create: `Directory.Build.targets`
 - Create: `Directory.Packages.props`
-- Create: `AtomUI.Base.slnx`
+- Create: `AtomUI.Foundation.slnx`
 - Create: `build/Version.props`
 - Create: `build/Common.props`
 - Create: `build/PackageMetaInfo.props`
@@ -172,7 +172,7 @@ Create `build/Version.props`:
 <Project>
     <PropertyGroup>
         <NoWarn>$(NoWarn);CS7035</NoWarn>
-        <AtomUIBaseVersion>1.0.0-alpha.1</AtomUIBaseVersion>
+        <AtomUIFoundationVersion>1.0.0-alpha.1</AtomUIFoundationVersion>
     </PropertyGroup>
 </Project>
 ```
@@ -182,15 +182,15 @@ Create `build/Common.props`:
 ```xml
 <Project>
     <PropertyGroup>
-        <AtomUIBaseDevelopTargetFramework>net10.0</AtomUIBaseDevelopTargetFramework>
-        <AtomUIBaseProductionTargetFramework>net8.0</AtomUIBaseProductionTargetFramework>
+        <AtomUIFoundationDevelopTargetFramework>net10.0</AtomUIFoundationDevelopTargetFramework>
+        <AtomUIFoundationProductionTargetFramework>net8.0</AtomUIFoundationProductionTargetFramework>
         <OutputType>Library</OutputType>
         <TrimMode>copyused</TrimMode>
         <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
 
-        <AtomUIBaseTargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(AtomUIBaseDevelopTargetFramework)</AtomUIBaseTargetFrameworks>
-        <AtomUIBaseTargetFrameworks Condition=" '$(Configuration)' == 'Release' ">$(AtomUIBaseDevelopTargetFramework);$(AtomUIBaseProductionTargetFramework)</AtomUIBaseTargetFrameworks>
+        <AtomUIFoundationTargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(AtomUIFoundationDevelopTargetFramework)</AtomUIFoundationTargetFrameworks>
+        <AtomUIFoundationTargetFrameworks Condition=" '$(Configuration)' == 'Release' ">$(AtomUIFoundationDevelopTargetFramework);$(AtomUIFoundationProductionTargetFramework)</AtomUIFoundationTargetFrameworks>
 
         <IsTestProject Condition="$(MSBuildProjectFullPath.Contains('test')) and $(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
@@ -210,16 +210,16 @@ Create `build/PackageMetaInfo.props`:
 <Project>
     <PropertyGroup>
         <PackageId>$(MSBuildProjectName)</PackageId>
-        <Title>AtomUI.Base</Title>
+        <Title>AtomUI.Foundation</Title>
         <Author>Qinware Technologies Ltd.</Author>
         <Authors>$(Author)</Authors>
-        <Description>AtomUI.Base provides foundational runtime and source-generation infrastructure for the AtomUI ecosystem.</Description>
+        <Description>AtomUI.Foundation provides foundational runtime and source-generation infrastructure for the AtomUI ecosystem.</Description>
         <PackageTags>AtomUI;UI;Infrastructure;SourceGenerator;Roslyn</PackageTags>
         <ProjectUrl>https://qinware.com</ProjectUrl>
-        <RepositoryUrl>https://github.com/AtomUI/AtomUI.Base</RepositoryUrl>
+        <RepositoryUrl>https://github.com/AtomUI/AtomUI.Foundation</RepositoryUrl>
         <Company>Qinware Technologies Ltd.</Company>
         <Copyright>Copyright ©2018-2026, Qinware Technologies Co.,Ltd., All Rights Reserved.</Copyright>
-        <Version>$(AtomUIBaseVersion)</Version>
+        <Version>$(AtomUIFoundationVersion)</Version>
     </PropertyGroup>
 </Project>
 ```
@@ -241,13 +241,13 @@ Create `build/Output.props`:
 
 - [ ] **Step 4: Create solution and resources placeholder**
 
-Create `AtomUI.Base.slnx`:
+Create `AtomUI.Foundation.slnx`:
 
 ```xml
 <Solution>
-  <Project Path="src/AtomUI.Base/AtomUI.Base.csproj" />
-  <Project Path="src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj" />
-  <Project Path="tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj" />
+  <Project Path="src/AtomUI.Foundation/AtomUI.Foundation.csproj" />
+  <Project Path="src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj" />
+  <Project Path="tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj" />
 </Solution>
 ```
 
@@ -258,8 +258,8 @@ Create `resources/.gitkeep` as an empty file.
 Run:
 
 ```bash
-git add .editorconfig .gitignore global.json Directory.Build.props Directory.Build.targets Directory.Packages.props AtomUI.Base.slnx build resources
-git commit -m "build: add AtomUI.Base repository build shell"
+git add .editorconfig .gitignore global.json Directory.Build.props Directory.Build.targets Directory.Packages.props AtomUI.Foundation.slnx build resources
+git commit -m "build: add AtomUI.Foundation repository build shell"
 ```
 
 Expected: commit succeeds and `.idea/` remains unstaged.
@@ -267,16 +267,16 @@ Expected: commit succeeds and `.idea/` remains unstaged.
 ### Task 2: Projects And Test Chain
 
 **Files:**
-- Create: `src/AtomUI.Base/AtomUI.Base.csproj`
-- Create: `src/AtomUI.Base/BaseAssemblyMarker.cs`
-- Create: `src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj`
-- Create: `src/AtomUI.Base.Generator/AtomUIBaseGeneratorMarker.cs`
-- Create: `tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj`
-- Create: `tests/AtomUI.Base.Tests/BaseAssemblyMarkerTests.cs`
+- Create: `src/AtomUI.Foundation/AtomUI.Foundation.csproj`
+- Create: `src/AtomUI.Foundation/FoundationAssemblyMarker.cs`
+- Create: `src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj`
+- Create: `src/AtomUI.Foundation.Generator/AtomUIFoundationGeneratorMarker.cs`
+- Create: `tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj`
+- Create: `tests/AtomUI.Foundation.Tests/FoundationAssemblyMarkerTests.cs`
 
 - [ ] **Step 1: Create project files without runtime marker implementation**
 
-Create `src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj`:
+Create `src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj`:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk"
@@ -306,47 +306,47 @@ Create `src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj`:
 </Project>
 ```
 
-Create `src/AtomUI.Base.Generator/AtomUIBaseGeneratorMarker.cs`:
+Create `src/AtomUI.Foundation.Generator/AtomUIFoundationGeneratorMarker.cs`:
 
 ```csharp
-namespace AtomUI.Base.Generator;
+namespace AtomUI.Foundation.Generator;
 
-internal static class AtomUIBaseGeneratorMarker
+internal static class AtomUIFoundationGeneratorMarker
 {
-    public const string AssemblyName = "AtomUI.Base.Generator";
+    public const string AssemblyName = "AtomUI.Foundation.Generator";
 }
 ```
 
-Create `src/AtomUI.Base/AtomUI.Base.csproj`:
+Create `src/AtomUI.Foundation/AtomUI.Foundation.csproj`:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFrameworks>$(AtomUIBaseTargetFrameworks)</TargetFrameworks>
-        <RootNamespace>AtomUI.Base</RootNamespace>
+        <TargetFrameworks>$(AtomUIFoundationTargetFrameworks)</TargetFrameworks>
+        <RootNamespace>AtomUI.Foundation</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../AtomUI.Base.Generator/AtomUI.Base.Generator.csproj"
+        <ProjectReference Include="../AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"
                           PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>
-        <AssemblyMetadata Include="AtomUIBaseVersion" Value="$(AtomUIBaseVersion)" />
+        <AssemblyMetadata Include="AtomUIFoundationVersion" Value="$(AtomUIFoundationVersion)" />
     </ItemGroup>
 </Project>
 ```
 
-Create `tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj`:
+Create `tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj`:
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net10.0</TargetFramework>
         <IsPackable>false</IsPackable>
-        <RootNamespace>AtomUI.Base.Tests</RootNamespace>
+        <RootNamespace>AtomUI.Foundation.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -357,8 +357,8 @@ Create `tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj`:
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../src/AtomUI.Base/AtomUI.Base.csproj" />
-        <ProjectReference Include="../../src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj"
+        <ProjectReference Include="../../src/AtomUI.Foundation/AtomUI.Foundation.csproj" />
+        <ProjectReference Include="../../src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj"
                           OutputItemType="Analyzer"
                           ReferenceOutputAssembly="false"
                           PrivateAssets="all" />
@@ -368,21 +368,21 @@ Create `tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj`:
 
 - [ ] **Step 2: Write failing marker test**
 
-Create `tests/AtomUI.Base.Tests/BaseAssemblyMarkerTests.cs`:
+Create `tests/AtomUI.Foundation.Tests/FoundationAssemblyMarkerTests.cs`:
 
 ```csharp
-using AtomUI.Base;
+using AtomUI.Foundation;
 using Shouldly;
 using Xunit;
 
-namespace AtomUI.Base.Tests;
+namespace AtomUI.Foundation.Tests;
 
-public sealed class BaseAssemblyMarkerTests
+public sealed class FoundationAssemblyMarkerTests
 {
     [Fact]
-    public void BaseAssemblyMarker_ShouldExposeAssemblyName()
+    public void FoundationAssemblyMarker_ShouldExposeAssemblyName()
     {
-        BaseAssemblyMarker.AssemblyName.ShouldBe("AtomUI.Base");
+        FoundationAssemblyMarker.AssemblyName.ShouldBe("AtomUI.Foundation");
     }
 }
 ```
@@ -392,21 +392,21 @@ public sealed class BaseAssemblyMarkerTests
 Run:
 
 ```bash
-dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0
+dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0
 ```
 
-Expected: fails with a compiler error that `BaseAssemblyMarker` does not exist.
+Expected: fails with a compiler error that `FoundationAssemblyMarker` does not exist.
 
 - [ ] **Step 4: Add minimal runtime marker implementation**
 
-Create `src/AtomUI.Base/BaseAssemblyMarker.cs`:
+Create `src/AtomUI.Foundation/FoundationAssemblyMarker.cs`:
 
 ```csharp
-namespace AtomUI.Base;
+namespace AtomUI.Foundation;
 
-public static class BaseAssemblyMarker
+public static class FoundationAssemblyMarker
 {
-    public const string AssemblyName = "AtomUI.Base";
+    public const string AssemblyName = "AtomUI.Foundation";
 }
 ```
 
@@ -415,7 +415,7 @@ public static class BaseAssemblyMarker
 Run:
 
 ```bash
-dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0
+dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0
 ```
 
 Expected: test run passes with `1` passed test and `0` failed tests.
@@ -426,7 +426,7 @@ Run:
 
 ```bash
 git add src tests
-git commit -m "feat: add AtomUI.Base project skeleton"
+git commit -m "feat: add AtomUI.Foundation project skeleton"
 ```
 
 Expected: commit succeeds.
@@ -447,21 +447,21 @@ Expected: commit succeeds.
 Create `AGENTS.md`:
 
 ```markdown
-# AtomUI.Base Agent Guide
+# AtomUI.Foundation Agent Guide
 
-This file gives AI coding agents the stable entry points for working in AtomUI.Base. Keep this file small. Put concrete, detailed rules in focused documents under `docs/`, then link them here.
+This file gives AI coding agents the stable entry points for working in AtomUI.Foundation. Keep this file small. Put concrete, detailed rules in focused documents under `docs/`, then link them here.
 
 ## Project Profile
 
-AtomUI.Base is the foundational library repository for the AtomUI ecosystem. It contains runtime base infrastructure, source generator infrastructure, tests, build configuration, local workflow skills, and NuGet release automation.
+AtomUI.Foundation is the foundational library repository for the AtomUI ecosystem. It contains runtime foundation infrastructure, source generator infrastructure, tests, build configuration, local workflow skills, and NuGet release automation.
 
 ```text
-AtomUI.Base/
+AtomUI.Foundation/
 ├── src/
-│   ├── AtomUI.Base
-│   └── AtomUI.Base.Generator
+│   ├── AtomUI.Foundation
+│   └── AtomUI.Foundation.Generator
 ├── tests/
-│   └── AtomUI.Base.Tests
+│   └── AtomUI.Foundation.Tests
 ├── docs/
 ├── build/
 ├── resources/
@@ -481,8 +481,8 @@ AtomUI.Base/
 ## Common Commands
 
 ```bash
-dotnet build AtomUI.Base.slnx
-dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0
+dotnet build AtomUI.Foundation.slnx
+dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0
 git diff --check
 ```
 ```
@@ -492,9 +492,9 @@ git diff --check
 Create `docs/global-engineering-guidelines.md`:
 
 ```markdown
-# AtomUI.Base Global Engineering Guidelines
+# AtomUI.Foundation Global Engineering Guidelines
 
-This document is the global engineering rules entry point for AtomUI.Base.
+This document is the global engineering rules entry point for AtomUI.Foundation.
 
 ## Documentation Placement
 
@@ -516,8 +516,8 @@ This document is the global engineering rules entry point for AtomUI.Base.
 
 Choose verification based on the touched area:
 
-- Build system or project structure: `dotnet build AtomUI.Base.slnx`.
-- Runtime library behavior: `dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0`.
+- Build system or project structure: `dotnet build AtomUI.Foundation.slnx`.
+- Runtime library behavior: `dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0`.
 - Source generator changes: add generator tests before changing generator behavior.
 - Every code or project-file change: run `git diff --check`.
 ```
@@ -527,22 +527,22 @@ Choose verification based on the touched area:
 Create `docs/architecture/overview.md`:
 
 ```markdown
-# AtomUI.Base Architecture Overview
+# AtomUI.Foundation Architecture Overview
 
-AtomUI.Base is the foundation repository for shared AtomUI infrastructure. The first version contains a runtime package and a source generator package.
+AtomUI.Foundation is the foundation repository for shared AtomUI infrastructure. The first version contains a runtime package and a source generator package.
 
 ## Projects
 
 | Project | Role |
 |---|---|
-| `AtomUI.Base` | Runtime foundational package for AtomUI ecosystem code. |
-| `AtomUI.Base.Generator` | Roslyn analyzer/source generator package skeleton consumed as an analyzer. |
-| `AtomUI.Base.Tests` | Tests for runtime package behavior and future regression coverage. |
+| `AtomUI.Foundation` | Runtime foundational package for AtomUI ecosystem code. |
+| `AtomUI.Foundation.Generator` | Roslyn analyzer/source generator package skeleton consumed as an analyzer. |
+| `AtomUI.Foundation.Tests` | Tests for runtime package behavior and future regression coverage. |
 
 ## Boundaries
 
-- `AtomUI.Base` may reference `AtomUI.Base.Generator` only as an analyzer.
-- `AtomUI.Base.Generator` must not depend on `AtomUI.Base`.
+- `AtomUI.Foundation` may reference `AtomUI.Foundation.Generator` only as an analyzer.
+- `AtomUI.Foundation.Generator` must not depend on `AtomUI.Foundation`.
 - Tests may reference both runtime and generator projects.
 ```
 
@@ -551,7 +551,7 @@ Create `docs/architecture/build-and-packaging.md`:
 ```markdown
 # Build And Packaging
 
-AtomUI.Base uses centralized MSBuild configuration.
+AtomUI.Foundation uses centralized MSBuild configuration.
 
 ## Target Frameworks
 
@@ -562,7 +562,7 @@ AtomUI.Base uses centralized MSBuild configuration.
 - Debug builds target `net10.0`.
 - Release builds target `net10.0;net8.0`.
 
-`AtomUI.Base.Generator` targets `netstandard2.0` because analyzer packages must load in compiler contexts beyond the runtime library target.
+`AtomUI.Foundation.Generator` targets `netstandard2.0` because analyzer packages must load in compiler contexts beyond the runtime library target.
 
 ## Package Management
 
@@ -580,7 +580,7 @@ Package versions must be declared centrally unless a package has a documented re
 
 ## Release Workflow
 
-`.github/workflows/release-atomui-base.yml` builds, tests, packs, pushes packages into a local NuGet feed for validation, uploads package artifacts, and optionally publishes to nuget.org.
+`.github/workflows/release-atomui-foundation.yml` builds, tests, packs, pushes packages into a local NuGet feed for validation, uploads package artifacts, and optionally publishes to nuget.org.
 ```
 
 Create `docs/architecture/dependency-graph.md`:
@@ -588,23 +588,23 @@ Create `docs/architecture/dependency-graph.md`:
 ```markdown
 # Dependency Graph
 
-This document records the first-version AtomUI.Base project dependency rules.
+This document records the first-version AtomUI.Foundation project dependency rules.
 
 ```mermaid
 flowchart TD
-    Generator["AtomUI.Base.Generator\nnetstandard2.0 analyzer package"]
-    Base["AtomUI.Base\nruntime package"]
-    Tests["AtomUI.Base.Tests\nxUnit v3 tests"]
+    Generator["AtomUI.Foundation.Generator\nnetstandard2.0 analyzer package"]
+    Foundation["AtomUI.Foundation\nruntime package"]
+    Tests["AtomUI.Foundation.Tests\nxUnit v3 tests"]
 
-    Generator -. analyzer .-> Base
-    Base --> Tests
+    Generator -. analyzer .-> Foundation
+    Foundation --> Tests
     Generator -. analyzer .-> Tests
 ```
 
 ## Rules
 
-- `AtomUI.Base.Generator` must stay independent of `AtomUI.Base`.
-- `AtomUI.Base` consumes `AtomUI.Base.Generator` with `OutputItemType="Analyzer"` and `ReferenceOutputAssembly="false"`.
+- `AtomUI.Foundation.Generator` must stay independent of `AtomUI.Foundation`.
+- `AtomUI.Foundation` consumes `AtomUI.Foundation.Generator` with `OutputItemType="Analyzer"` and `ReferenceOutputAssembly="false"`.
 - Test projects may reference runtime projects normally and generator projects as analyzers.
 ```
 
@@ -613,7 +613,7 @@ flowchart TD
 Create `docs/engineering/agent-guidelines.md`:
 
 ```markdown
-# AtomUI.Base AI Collaboration Guidelines
+# AtomUI.Foundation AI Collaboration Guidelines
 
 ## Scope Control
 
@@ -624,8 +624,8 @@ Create `docs/engineering/agent-guidelines.md`:
 ## Verification
 
 - Run the narrowest useful command while iterating.
-- Run `dotnet build AtomUI.Base.slnx` before reporting project structure or build-system work complete.
-- Run `dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0` before reporting runtime behavior complete.
+- Run `dotnet build AtomUI.Foundation.slnx` before reporting project structure or build-system work complete.
+- Run `dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0` before reporting runtime behavior complete.
 - Run `git diff --check` before reporting any file-editing work complete.
 ```
 
@@ -634,7 +634,7 @@ Create `docs/engineering/source-generator-guidelines.md`:
 ```markdown
 # Source Generator Guidelines
 
-`AtomUI.Base.Generator` is packaged as a Roslyn analyzer.
+`AtomUI.Foundation.Generator` is packaged as a Roslyn analyzer.
 
 ## Targeting
 
@@ -644,7 +644,7 @@ Create `docs/engineering/source-generator-guidelines.md`:
 
 ## Dependency Rules
 
-- Do not reference `AtomUI.Base` from `AtomUI.Base.Generator`.
+- Do not reference `AtomUI.Foundation` from `AtomUI.Foundation.Generator`.
 - Keep generator dependencies private with `PrivateAssets="all"`.
 - Runtime projects consume the generator through analyzer references only.
 
@@ -659,7 +659,7 @@ Run:
 
 ```bash
 git add AGENTS.md docs
-git commit -m "docs: add AtomUI.Base engineering documentation"
+git commit -m "docs: add AtomUI.Foundation engineering documentation"
 ```
 
 Expected: commit succeeds and keeps `docs/superpowers/plans/` tracked only because it contains this implementation plan.
@@ -681,13 +681,13 @@ Create `.agents/skills/changelog-collect/SKILL.md`:
 
 ```markdown
 ---
-name: atomui-base-changelog-collect
-description: Use when collecting AtomUI.Base changelog entries from git history, staged changes, issue references, or release notes and turning them into a concise Markdown changelog draft grouped by change type.
+name: atomui-foundation-changelog-collect
+description: Use when collecting AtomUI.Foundation changelog entries from git history, staged changes, issue references, or release notes and turning them into a concise Markdown changelog draft grouped by change type.
 ---
 
-# AtomUI.Base Changelog Collect
+# AtomUI.Foundation Changelog Collect
 
-Use this skill to collect user-facing changes for AtomUI.Base release notes or a changelog draft.
+Use this skill to collect user-facing changes for AtomUI.Foundation release notes or a changelog draft.
 
 ## Workflow
 
@@ -709,11 +709,11 @@ Create `.agents/skills/commit-msg/SKILL.md`:
 
 ```markdown
 ---
-name: atomui-base-commit-msg
-description: Generate a single-line commit message for AtomUI.Base by reading staged changes and recent commit style. Use when the user asks for a commit message, says "msg", "commit msg", "写提交信息", "创建 commit", or wants one-line text that covers staged changes.
+name: atomui-foundation-commit-msg
+description: Generate a single-line commit message for AtomUI.Foundation by reading staged changes and recent commit style. Use when the user asks for a commit message, says "msg", "commit msg", "写提交信息", "创建 commit", or wants one-line text that covers staged changes.
 ---
 
-# AtomUI.Base Commit Message Generation
+# AtomUI.Foundation Commit Message Generation
 
 ## Workflow
 
@@ -747,7 +747,7 @@ Rules:
 Create `.agents/skills/commit-msg/references/commit-message-convention.md`:
 
 ```markdown
-# AtomUI.Base Git Commit Message Convention
+# AtomUI.Foundation Git Commit Message Convention
 
 ## Format
 
@@ -780,7 +780,7 @@ or:
 
 ## Scopes
 
-Recommended scopes include `Base`, `Generator`, `Packaging`, `deps`, `docs`, and `ci`.
+Recommended scopes include `Foundation`, `Generator`, `Packaging`, `deps`, `docs`, and `ci`.
 ```
 
 - [ ] **Step 3: Create PR and issue skills**
@@ -789,11 +789,11 @@ Create `.agents/skills/create-pr/SKILL.md`:
 
 ```markdown
 ---
-name: atomui-base-create-pr
-description: Use when preparing an AtomUI.Base pull request summary from local git changes, including overview, validation, risks, and reviewer notes.
+name: atomui-foundation-create-pr
+description: Use when preparing an AtomUI.Foundation pull request summary from local git changes, including overview, validation, risks, and reviewer notes.
 ---
 
-# Create AtomUI.Base PR
+# Create AtomUI.Foundation PR
 
 ## Workflow
 
@@ -822,11 +822,11 @@ Create `.agents/skills/issue-reply/SKILL.md`:
 
 ```markdown
 ---
-name: atomui-base-issue-reply
-description: Use when drafting a concise GitHub issue or discussion reply for AtomUI.Base based on repository state, bug analysis, requested behavior, workarounds, or maintainer follow-up questions.
+name: atomui-foundation-issue-reply
+description: Use when drafting a concise GitHub issue or discussion reply for AtomUI.Foundation based on repository state, bug analysis, requested behavior, workarounds, or maintainer follow-up questions.
 ---
 
-# AtomUI.Base Issue Reply
+# AtomUI.Foundation Issue Reply
 
 ## Workflow
 
@@ -847,18 +847,18 @@ Create `.agents/skills/upgrade-dependencies/SKILL.md`:
 
 ```markdown
 ---
-name: atomui-base-upgrade-dependencies
-description: Use when upgrading AtomUI.Base NuGet dependencies, Roslyn packages, test packages, or any third-party version where compatibility must be evaluated before implementation.
+name: atomui-foundation-upgrade-dependencies
+description: Use when upgrading AtomUI.Foundation NuGet dependencies, Roslyn packages, test packages, or any third-party version where compatibility must be evaluated before implementation.
 ---
 
-# AtomUI.Base Dependency Upgrade
+# AtomUI.Foundation Dependency Upgrade
 
 ## Rules
 
 - Do not modify dependency versions during evaluation.
 - Upgrade one dependency family at a time unless the user approves grouping.
 - Check `build/Version.props`, `Directory.Packages.props`, and affected project files.
-- Preserve AtomUI.Base behavior and package boundaries.
+- Preserve AtomUI.Foundation behavior and package boundaries.
 
 ## Evaluation
 
@@ -867,7 +867,7 @@ Report:
 - Current version and target version.
 - Owning version file.
 - Source or release-note evidence used.
-- AtomUI.Base usage impact from code search.
+- AtomUI.Foundation usage impact from code search.
 - Required code or test changes.
 - Verification commands.
 
@@ -880,11 +880,11 @@ Create `.agents/skills/version-release/SKILL.md`:
 
 ```markdown
 ---
-name: atomui-base-version-release
-description: Use when preparing an AtomUI.Base version release, including version files, changelog readiness, release commits, package validation, and final release notes.
+name: atomui-foundation-version-release
+description: Use when preparing an AtomUI.Foundation version release, including version files, changelog readiness, release commits, package validation, and final release notes.
 ---
 
-# AtomUI.Base Version Release
+# AtomUI.Foundation Version Release
 
 ## Workflow
 
@@ -907,7 +907,7 @@ Run:
 
 ```bash
 git add .agents
-git commit -m "chore: add AtomUI.Base local agent skills"
+git commit -m "chore: add AtomUI.Foundation local agent skills"
 ```
 
 Expected: commit succeeds.
@@ -915,14 +915,14 @@ Expected: commit succeeds.
 ### Task 5: GitHub Release Workflow
 
 **Files:**
-- Create: `.github/workflows/release-atomui-base.yml`
+- Create: `.github/workflows/release-atomui-foundation.yml`
 
 - [ ] **Step 1: Create release workflow**
 
-Create `.github/workflows/release-atomui-base.yml`:
+Create `.github/workflows/release-atomui-foundation.yml`:
 
 ```yaml
-name: AtomUI.Base Release Pipeline
+name: AtomUI.Foundation Release Pipeline
 
 on:
   workflow_dispatch:
@@ -942,12 +942,12 @@ on:
 
 env:
   SOURCE_DIR: ${{ github.workspace }}
-  BASE_OUTPUT_DIR: ${{ github.workspace }}/output
+  PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/output
   LOCAL_NUGET_DIR: ${{ github.workspace }}/nuget
 
 jobs:
-  BuildAtomUIBaseNuget:
-    name: Build AtomUI.Base NuGet packages
+  BuildAtomUIFoundationNuget:
+    name: Build AtomUI.Foundation NuGet packages
     runs-on: windows-latest
     steps:
       - name: Checkout code
@@ -975,27 +975,27 @@ jobs:
             exit 1
           }
 
-      - name: Build AtomUI.Base solution
+      - name: Build AtomUI.Foundation solution
         shell: pwsh
         run: |
-          dotnet build --configuration ${{ inputs.BuildConfiguration }} ./AtomUI.Base.slnx
+          dotnet build --configuration ${{ inputs.BuildConfiguration }} ./AtomUI.Foundation.slnx
 
-      - name: Test AtomUI.Base
+      - name: Test AtomUI.Foundation
         shell: pwsh
         run: |
-          dotnet test ./tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0 --configuration ${{ inputs.BuildConfiguration }} --no-build
+          dotnet test ./tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0 --configuration ${{ inputs.BuildConfiguration }} --no-build
 
-      - name: Create AtomUI.Base NuGet packages
+      - name: Create AtomUI.Foundation NuGet packages
         shell: pwsh
         run: |
           $projects = @(
-            "./src/AtomUI.Base/AtomUI.Base.csproj",
-            "./src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj"
+            "./src/AtomUI.Foundation/AtomUI.Foundation.csproj",
+            "./src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj"
           )
           foreach ($project in $projects) {
-            dotnet pack --no-build --output $env:BASE_OUTPUT_DIR --configuration ${{ inputs.BuildConfiguration }} $project
+            dotnet pack --no-build --output $env:PACKAGE_OUTPUT_DIR --configuration ${{ inputs.BuildConfiguration }} $project
           }
-          $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
+          $packages = Get-ChildItem -Path $env:PACKAGE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
           foreach ($pkg in $packages) {
             try {
               dotnet nuget push $pkg.FullName --source $env:LOCAL_NUGET_DIR --skip-duplicate
@@ -1014,13 +1014,13 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: NuGetPackages
-          path: ${{ env.BASE_OUTPUT_DIR }}/*.nupkg
+          path: ${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg
 
       - name: Publish to nuget.org
         if: ${{ inputs.PublishToNuget == true }}
         shell: pwsh
         run: |
-          $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
+          $packages = Get-ChildItem -Path $env:PACKAGE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
           foreach ($pkg in $packages) {
             try {
               dotnet nuget push $pkg.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
@@ -1042,7 +1042,7 @@ Run:
 
 ```bash
 git add .github
-git commit -m "ci: add AtomUI.Base NuGet release workflow"
+git commit -m "ci: add AtomUI.Foundation NuGet release workflow"
 ```
 
 Expected: commit succeeds.
@@ -1057,7 +1057,7 @@ Expected: commit succeeds.
 Run:
 
 ```bash
-dotnet build AtomUI.Base.slnx
+dotnet build AtomUI.Foundation.slnx
 ```
 
 Expected: build succeeds.
@@ -1067,7 +1067,7 @@ Expected: build succeeds.
 Run:
 
 ```bash
-dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0
+dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0
 ```
 
 Expected: test run succeeds with `1` passed test and `0` failed tests.
@@ -1077,8 +1077,8 @@ Expected: test run succeeds with `1` passed test and `0` failed tests.
 Run:
 
 ```bash
-dotnet pack src/AtomUI.Base/AtomUI.Base.csproj -c Release
-dotnet pack src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj -c Release
+dotnet pack src/AtomUI.Foundation/AtomUI.Foundation.csproj -c Release
+dotnet pack src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj -c Release
 ```
 
 Expected: both package commands succeed and write `.nupkg` files under `output/Nuget/Release`.
@@ -1104,7 +1104,7 @@ find docs/superpowers -type f -print
 Expected output contains only:
 
 ```text
-docs/superpowers/plans/2026-06-26-atomui-base-project-structure.md
+docs/superpowers/plans/2026-06-26-atomui-foundation-project-structure.md
 ```
 
 - [ ] **Step 6: Commit verification adjustments**
@@ -1113,7 +1113,7 @@ If verification required file changes, run:
 
 ```bash
 git add .
-git commit -m "chore: finalize AtomUI.Base repository skeleton"
+git commit -m "chore: finalize AtomUI.Foundation repository skeleton"
 ```
 
 Expected: commit succeeds only when there are verification-driven file changes. If there are no changes, skip this step.

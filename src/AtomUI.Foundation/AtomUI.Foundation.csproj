@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(AtomUIFoundationTargetFrameworks)</TargetFrameworks>
+        <RootNamespace>AtomUI.Foundation</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="../AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj"
+                          OutputItemType="Analyzer"
+                          ReferenceOutputAssembly="false"
+                          PrivateAssets="all" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyMetadata Include="AtomUIFoundationVersion" Value="$(AtomUIFoundationVersion)" />
+    </ItemGroup>
+</Project>

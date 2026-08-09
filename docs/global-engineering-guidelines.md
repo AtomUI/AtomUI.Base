@@ -1,6 +1,6 @@
-# AtomUI.Base Global Engineering Guidelines
+# AtomUI.Foundation Global Engineering Guidelines
 
-This document is the global engineering rules entry point for AtomUI.Base.
+This document is the global engineering rules entry point for AtomUI.Foundation.
 
 ## Documentation Placement
 
@@ -22,7 +22,7 @@ This document is the global engineering rules entry point for AtomUI.Base.
 
 Choose verification based on the touched area:
 
-- Build system or project structure: `dotnet build AtomUI.Base.slnx`.
-- Runtime library behavior: `dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0`.
-- Source generator changes: add generator tests before changing generator behavior.
+- Build system or project structure: `dotnet build AtomUI.Foundation.slnx`.
+- Runtime library behavior: `dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0`.
+- Source generator changes: add generator tests before changing generator behavior, then run `dotnet test tests/AtomUI.Foundation.Generator.Tests/AtomUI.Foundation.Generator.Tests.csproj --framework net10.0`.
 - Every code or project-file change: run `git diff --check`.

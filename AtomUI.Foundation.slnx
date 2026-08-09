@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/AtomUI.Foundation/AtomUI.Foundation.csproj" />
+  <Project Path="src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj" />
+  <Project Path="tests/AtomUI.Foundation.Generator.Tests/AtomUI.Foundation.Generator.Tests.csproj" />
+  <Project Path="tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj" />
+</Solution>

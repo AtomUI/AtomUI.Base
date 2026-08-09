@@ -1,18 +1,19 @@
 <Project>
     <PropertyGroup>
         <PackageId>$(MSBuildProjectName)</PackageId>
-        <Title>AtomUI.Base</Title>
+        <Title>$(MSBuildProjectName)</Title>
         <Author>Qinware Technologies Ltd.</Author>
         <Authors>$(Author)</Authors>
-        <Description>AtomUI.Base provides foundational runtime and source-generation infrastructure for the AtomUI ecosystem.</Description>
+        <Description Condition="'$(MSBuildProjectName)' == 'AtomUI.Foundation'">AtomUI.Foundation provides foundational runtime infrastructure for the AtomUI ecosystem.</Description>
+        <Description Condition="'$(MSBuildProjectName)' == 'AtomUI.Foundation.Generator'">AtomUI.Foundation.Generator provides Roslyn source-generation infrastructure for the AtomUI ecosystem.</Description>
         <PackageTags>AtomUI;UI;Infrastructure;SourceGenerator;Roslyn</PackageTags>
         <ProjectUrl>https://qinware.com</ProjectUrl>
-        <RepositoryUrl>https://github.com/AtomUI/AtomUI.Base</RepositoryUrl>
+        <RepositoryUrl>https://github.com/AtomUI/AtomUI.Foundation</RepositoryUrl>
         <Company>Qinware Technologies Ltd.</Company>
         <Copyright>Copyright ©2018-2026, Qinware Technologies Co.,Ltd., All Rights Reserved.</Copyright>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageLicenseFile>LICENSE</PackageLicenseFile>
-        <Version>$(AtomUIBaseVersion)</Version>
+        <Version>$(AtomUIFoundationVersion)</Version>
     </PropertyGroup>
 
     <ItemGroup>

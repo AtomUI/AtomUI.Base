@@ -1,11 +1,11 @@
-name: AtomUI.Base Release Pipeline
+name: AtomUI.Foundation Release Pipeline
 
 on:
   push:
     branches:
       - release/1.0
     paths:
-      - .github/workflows/release-atomui-base.yml
+      - .github/workflows/release-atomui-foundation.yml
   workflow_dispatch:
     inputs:
       target_branch:
@@ -23,13 +23,13 @@ on:
 
 env:
   SOURCE_DIR: ${{ github.workspace }}
-  BASE_OUTPUT_DIR: ${{ github.workspace }}/output
+  PACKAGE_OUTPUT_DIR: ${{ github.workspace }}/output
   BUILD_CONFIGURATION: ${{ github.event.inputs.build_configuration || 'Release' }}
   TARGET_BRANCH: ${{ github.event.inputs.target_branch || github.ref_name }}
 
 jobs:
-  BuildAtomUIBaseNuget:
-    name: Build AtomUI.Base NuGet packages
+  BuildAtomUIFoundationNuget:
+    name: Build AtomUI.Foundation NuGet packages
     runs-on: windows-latest
     steps:
       - name: Checkout code
@@ -42,38 +42,43 @@ jobs:
         with:
           dotnet-version: '10.0.x'
 
-      - name: Build AtomUI.Base solution
+      - name: Build AtomUI.Foundation solution
         shell: pwsh
         run: |
-          dotnet build --configuration $env:BUILD_CONFIGURATION ./AtomUI.Base.slnx
+          dotnet build --configuration $env:BUILD_CONFIGURATION ./AtomUI.Foundation.slnx
 
-      - name: Test AtomUI.Base
+      - name: Test AtomUI.Foundation
         shell: pwsh
         run: |
-          dotnet test ./tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0 --configuration $env:BUILD_CONFIGURATION --no-build
+          dotnet test ./tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0 --configuration $env:BUILD_CONFIGURATION --no-build
 
-      - name: Create AtomUI.Base NuGet packages
+      - name: Test AtomUI.Foundation.Generator
+        shell: pwsh
+        run: |
+          dotnet test ./tests/AtomUI.Foundation.Generator.Tests/AtomUI.Foundation.Generator.Tests.csproj --framework net10.0 --configuration $env:BUILD_CONFIGURATION --no-build
+
+      - name: Create AtomUI.Foundation NuGet packages
         shell: pwsh
         run: |
           $projects = @(
-            "./src/AtomUI.Base/AtomUI.Base.csproj",
-            "./src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj"
+            "./src/AtomUI.Foundation/AtomUI.Foundation.csproj",
+            "./src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj"
           )
           foreach ($project in $projects) {
-            dotnet pack --no-build --output $env:BASE_OUTPUT_DIR --configuration $env:BUILD_CONFIGURATION $project
+            dotnet pack --no-build --output $env:PACKAGE_OUTPUT_DIR --configuration $env:BUILD_CONFIGURATION $project
           }
 
       - name: Upload NuGet artifacts
         uses: actions/upload-artifact@v4
         with:
           name: NuGetPackages
-          path: ${{ env.BASE_OUTPUT_DIR }}/*.nupkg
+          path: ${{ env.PACKAGE_OUTPUT_DIR }}/*.nupkg
 
       - name: Publish to nuget.org
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.publish_to_nuget == 'true' }}
         shell: pwsh
         run: |
-          $packages = Get-ChildItem -Path $env:BASE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
+          $packages = Get-ChildItem -Path $env:PACKAGE_OUTPUT_DIR -Filter *.nupkg -Recurse -File
           foreach ($pkg in $packages) {
             try {
               dotnet nuget push $pkg.FullName --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate

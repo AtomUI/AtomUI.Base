@@ -1,9 +1,9 @@
 ---
-name: atomui-base-issue-reply
-description: Use when drafting a concise GitHub issue or discussion reply for AtomUI.Base based on repository state, bug analysis, requested behavior, workarounds, or maintainer follow-up questions.
+name: atomui-foundation-issue-reply
+description: Use when drafting a concise GitHub issue or discussion reply for AtomUI.Foundation based on repository state, bug analysis, requested behavior, workarounds, or maintainer follow-up questions.
 ---
 
-# AtomUI.Base Issue Reply
+# AtomUI.Foundation Issue Reply
 
 ## Workflow
 

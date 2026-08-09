@@ -1,4 +1,4 @@
-# AtomUI.Base Git Commit Message Convention
+# AtomUI.Foundation Git Commit Message Convention
 
 ## Format
 
@@ -31,4 +31,4 @@ or:
 
 ## Scopes
 
-Recommended scopes include `Base`, `Generator`, `Packaging`, `deps`, `docs`, and `ci`.
+Recommended scopes include `Foundation`, `Generator`, `Packaging`, `deps`, `docs`, and `ci`.

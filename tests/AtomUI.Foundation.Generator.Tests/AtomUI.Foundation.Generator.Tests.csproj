@@ -3,7 +3,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <RootNamespace>AtomUI.Modularity.Generators.Tests</RootNamespace>
+        <RootNamespace>AtomUI.Foundation.Generator.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -15,7 +15,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="../../src/AtomUI.Base/AtomUI.Base.csproj" />
-        <ProjectReference Include="../../src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj" />
+        <ProjectReference Include="../../src/AtomUI.Foundation/AtomUI.Foundation.csproj" />
+        <ProjectReference Include="../../src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj" />
     </ItemGroup>
 </Project>

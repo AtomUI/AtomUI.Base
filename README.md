@@ -1,4 +1,4 @@
-# AtomUI.Base
+# AtomUI.Foundation
 
 [![License: LGPL-3.0](https://img.shields.io/badge/license-LGPL--3.0-white?labelColor=black&style=flat-square)](LICENSE)
 
@@ -6,32 +6,32 @@ Documentation Language: [English](README.md) | [简体中文](README.zh-CN.md)
 
 ## Overview
 
-AtomUI.Base is the foundational infrastructure repository for the AtomUI ecosystem. It provides shared runtime primitives
+AtomUI.Foundation is the foundational infrastructure repository for the AtomUI ecosystem. It provides shared runtime primitives
 and source-generation support that other AtomUI packages can build on without depending on a specific control library.
 
 The first release focuses on modularity:
 
-- `AtomUI.Base` contains module identifiers, module descriptors, dependency graph resolution, lifecycle hosting and
+- `AtomUI.Foundation` contains module identifiers, module descriptors, dependency graph resolution, lifecycle hosting and
   module service registration primitives.
-- `AtomUI.Base.Generator` contains Roslyn source generators and diagnostics for module catalog generation.
+- `AtomUI.Foundation.Generator` contains Roslyn source generators and diagnostics for module catalog generation.
 
 ## Packages
 
 | Package | Description |
 |---|---|
-| `AtomUI.Base` | Runtime infrastructure package for shared AtomUI foundation APIs. |
-| `AtomUI.Base.Generator` | Analyzer/source-generator package for generated AtomUI infrastructure. |
+| `AtomUI.Foundation` | Runtime infrastructure package for shared AtomUI foundation APIs. |
+| `AtomUI.Foundation.Generator` | Analyzer/source-generator package for generated AtomUI infrastructure. |
 
 Current prerelease version:
 
 ```bash
-dotnet add package AtomUI.Base --version 1.0.0-alpha.1
+dotnet add package AtomUI.Foundation --version 1.0.0-alpha.1
 ```
 
 If your project needs generated module catalogs, reference the generator as an analyzer:
 
 ```xml
-<PackageReference Include="AtomUI.Base.Generator" Version="1.0.0-alpha.1" PrivateAssets="all" />
+<PackageReference Include="AtomUI.Foundation.Generator" Version="1.0.0-alpha.1" PrivateAssets="all" />
 ```
 
 ## Modularity
@@ -76,19 +76,19 @@ Generated catalog naming can be customized with MSBuild properties:
 Build the full solution:
 
 ```bash
-dotnet build AtomUI.Base.slnx
+dotnet build AtomUI.Foundation.slnx
 ```
 
 Run runtime tests:
 
 ```bash
-dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0
+dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0
 ```
 
 Run generator tests:
 
 ```bash
-dotnet test tests/AtomUI.Base.Generator.Tests/AtomUI.Base.Generator.Tests.csproj --framework net10.0
+dotnet test tests/AtomUI.Foundation.Generator.Tests/AtomUI.Foundation.Generator.Tests.csproj --framework net10.0
 ```
 
 Publish packages to a local NuGet source:
@@ -102,14 +102,14 @@ pwsh -File scripts/PublishToLocalSources.ps1 -localSourcesDir /path/to/nuget.loc
 
 | Path | Purpose |
 |---|---|
-| `src/AtomUI.Base` | Runtime package source. |
-| `src/AtomUI.Base.Generator` | Roslyn generator package source. |
-| `tests/AtomUI.Base.Tests` | Runtime tests. |
-| `tests/AtomUI.Base.Generator.Tests` | Generator tests. |
+| `src/AtomUI.Foundation` | Runtime package source. |
+| `src/AtomUI.Foundation.Generator` | Roslyn generator package source. |
+| `tests/AtomUI.Foundation.Tests` | Runtime tests. |
+| `tests/AtomUI.Foundation.Generator.Tests` | Generator tests. |
 | `build/` | Centralized MSBuild versioning, package metadata and output configuration. |
 | `docs/` | Architecture and engineering documentation. |
 | `scripts/` | Local development and publishing scripts. |
 
 ## License
 
-AtomUI.Base uses the same license as AtomUI: GNU Lesser General Public License v3.0. See [LICENSE](LICENSE).
+AtomUI.Foundation uses the same license as AtomUI: GNU Lesser General Public License v3.0. See [LICENSE](LICENSE).

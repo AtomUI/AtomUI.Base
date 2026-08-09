@@ -1,14 +1,14 @@
 <Project>
     <PropertyGroup>
-        <AtomUIBaseDevelopTargetFramework>net10.0</AtomUIBaseDevelopTargetFramework>
-        <AtomUIBaseProductionTargetFramework>net8.0</AtomUIBaseProductionTargetFramework>
+        <AtomUIFoundationDevelopTargetFramework>net10.0</AtomUIFoundationDevelopTargetFramework>
+        <AtomUIFoundationProductionTargetFramework>net8.0</AtomUIFoundationProductionTargetFramework>
         <OutputType>Library</OutputType>
         <TrimMode>copyused</TrimMode>
         <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
         <BuiltInComInteropSupport>false</BuiltInComInteropSupport>
 
-        <AtomUIBaseTargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(AtomUIBaseDevelopTargetFramework)</AtomUIBaseTargetFrameworks>
-        <AtomUIBaseTargetFrameworks Condition=" '$(Configuration)' == 'Release' ">$(AtomUIBaseDevelopTargetFramework);$(AtomUIBaseProductionTargetFramework)</AtomUIBaseTargetFrameworks>
+        <AtomUIFoundationTargetFrameworks Condition=" '$(Configuration)' == 'Debug' ">$(AtomUIFoundationDevelopTargetFramework)</AtomUIFoundationTargetFrameworks>
+        <AtomUIFoundationTargetFrameworks Condition=" '$(Configuration)' == 'Release' ">$(AtomUIFoundationDevelopTargetFramework);$(AtomUIFoundationProductionTargetFramework)</AtomUIFoundationTargetFrameworks>
 
         <IsTestProject Condition="$(MSBuildProjectFullPath.Contains('test')) and $(MSBuildProjectName.EndsWith('.Tests'))">true</IsTestProject>
         <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>

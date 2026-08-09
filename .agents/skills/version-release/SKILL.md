@@ -1,9 +1,9 @@
 ---
-name: atomui-base-version-release
-description: Use when preparing an AtomUI.Base version release, including version files, changelog readiness, release commits, package validation, and final release notes.
+name: atomui-foundation-version-release
+description: Use when preparing an AtomUI.Foundation version release, including version files, changelog readiness, release commits, package validation, and final release notes.
 ---
 
-# AtomUI.Base Version Release
+# AtomUI.Foundation Version Release
 
 ## Workflow
 

@@ -1,18 +1,19 @@
-# AtomUI.Base Agent Guide
+# AtomUI.Foundation Agent Guide
 
-This file gives AI coding agents the stable entry points for working in AtomUI.Base. Keep this file small. Put concrete, detailed rules in focused documents under `docs/`, then link them here.
+This file gives AI coding agents the stable entry points for working in AtomUI.Foundation. Keep this file small. Put concrete, detailed rules in focused documents under `docs/`, then link them here.
 
 ## Project Profile
 
-AtomUI.Base is the foundational library repository for the AtomUI ecosystem. It contains runtime base infrastructure, source generator infrastructure, tests, build configuration, local workflow skills, and NuGet release automation.
+AtomUI.Foundation is the foundational library repository for the AtomUI ecosystem. It contains runtime foundation infrastructure, source generator infrastructure, tests, build configuration, local workflow skills, and NuGet release automation.
 
 ```text
-AtomUI.Base/
+AtomUI.Foundation/
 ├── src/
-│   ├── AtomUI.Base
-│   └── AtomUI.Base.Generator
+│   ├── AtomUI.Foundation
+│   └── AtomUI.Foundation.Generator
 ├── tests/
-│   └── AtomUI.Base.Tests
+│   ├── AtomUI.Foundation.Tests
+│   └── AtomUI.Foundation.Generator.Tests
 ├── docs/
 ├── build/
 ├── resources/
@@ -32,7 +33,8 @@ AtomUI.Base/
 ## Common Commands
 
 ```bash
-dotnet build AtomUI.Base.slnx
-dotnet test tests/AtomUI.Base.Tests/AtomUI.Base.Tests.csproj --framework net10.0
+dotnet build AtomUI.Foundation.slnx
+dotnet test tests/AtomUI.Foundation.Tests/AtomUI.Foundation.Tests.csproj --framework net10.0
+dotnet test tests/AtomUI.Foundation.Generator.Tests/AtomUI.Foundation.Generator.Tests.csproj --framework net10.0
 git diff --check
 ```

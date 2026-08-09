@@ -77,8 +77,8 @@ if ([string]::IsNullOrWhiteSpace($localSourcesDir)) {
 $repoRoot = (Resolve-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath "..")).Path
 $packageOutputPath = Join-Path -Path $repoRoot -ChildPath "output/Nuget/LocalSource/$buildType"
 $packageProjects = @(
-    "src/AtomUI.Base.Generator/AtomUI.Base.Generator.csproj",
-    "src/AtomUI.Base/AtomUI.Base.csproj"
+    "src/AtomUI.Foundation.Generator/AtomUI.Foundation.Generator.csproj",
+    "src/AtomUI.Foundation/AtomUI.Foundation.csproj"
 )
 
 New-Item -Path $localSourcesDir -ItemType Directory -Force | Out-Null
